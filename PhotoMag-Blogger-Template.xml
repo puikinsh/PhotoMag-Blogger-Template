@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE html>
+<!--
+=============================================================
+ PhotoMag - Free Photography Blogger Template
+ Version: 2.0.0
+ Author: Colorlib (https://colorlib.com)
+ Demo: https://photomag-preview.blogspot.com
+ License: GPL v3 (https://www.gnu.org/licenses/gpl-3.0)
+=============================================================
+-->
 <html b:css='false' b:version='2' class='v2' expr:dir='data:blog.languageDirection' expr:lang='data:blog.locale' xmlns='http://www.w3.org/1999/xhtml' xmlns:b='http://www.google.com/2005/gml/b' xmlns:data='http://www.google.com/2005/gml/data' xmlns:expr='http://www.google.com/2005/gml/expr'>
   <head>
 
@@ -742,7 +751,7 @@ user is not using shrink to fit then we expand the header.
               <a href='javascript:;'><i class='ion-ios-search'/></a>
               <div class='search-form'>
                 <form action='/search' id='searchform' method='get'>
-                  <input name='q' placeholder='Search' type='text' vk_18d09='subscribed' vk_1ad21='subscribed' vk_1b6ba='subscribed'/>
+                  <input aria-label='Search' name='q' placeholder='Search' type='text'/>
                 </form>
               </div>
             </div>
