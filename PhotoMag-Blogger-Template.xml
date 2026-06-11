@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE html>
-<html b:version='2' class='v2' expr:dir='data:blog.languageDirection' xmlns='http://www.w3.org/1999/xhtml' xmlns:b='http://www.google.com/2005/gml/b' xmlns:data='http://www.google.com/2005/gml/data' xmlns:expr='http://www.google.com/2005/gml/expr'>
+<html b:css='false' b:version='2' class='v2' expr:dir='data:blog.languageDirection' expr:lang='data:blog.locale' xmlns='http://www.w3.org/1999/xhtml' xmlns:b='http://www.google.com/2005/gml/b' xmlns:data='http://www.google.com/2005/gml/data' xmlns:expr='http://www.google.com/2005/gml/expr'>
   <head>
 
 
@@ -20,6 +20,43 @@
 
 	<!-- Blogger main head data and meta -->
     <b:include data='blog' name='all-head-content'/>
+
+    <!-- Social sharing meta -->
+    <meta expr:content='data:blog.pageTitle' property='og:title'/>
+    <b:if cond='data:blog.pageType == &quot;item&quot;'>
+    <meta content='article' property='og:type'/>
+    <b:else/>
+    <meta content='website' property='og:type'/>
+    </b:if>
+    <meta expr:content='data:blog.canonicalUrl' property='og:url'/>
+    <b:if cond='data:blog.postImageUrl'>
+    <meta expr:content='data:blog.postImageUrl' property='og:image'/>
+    </b:if>
+    <b:if cond='data:blog.metaDescription'>
+    <meta expr:content='data:blog.metaDescription' property='og:description'/>
+    </b:if>
+    <meta content='summary_large_image' name='twitter:card'/>
+    <meta expr:content='data:blog.pageTitle' name='twitter:title'/>
+    <b:if cond='data:blog.postImageUrl'>
+    <meta expr:content='data:blog.postImageUrl' name='twitter:image'/>
+    </b:if>
+    <b:if cond='data:blog.metaDescription'>
+    <meta expr:content='data:blog.metaDescription' name='twitter:description'/>
+    </b:if>
+
+    <script type='application/ld+json'>
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "<data:blog.title/>",
+      "url": "<data:blog.homepageUrl/>",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "<data:blog.homepageUrl/>search?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
 
     <link href='https://fonts.googleapis.com/css?family=Roboto+Condensed:300,400,700|Satisfy&amp;display=swap' rel='stylesheet'/>
     <link crossorigin='anonymous' href='https://cdn.jsdelivr.net' rel='preconnect'/>
@@ -61,7 +98,7 @@ button,input,select,textarea{font-family:inherit;font-size:100%;margin:0}
 /*GLBL*/
 html,body{height:100%;}
 body{background: #000;color:#fff;font-family: 'Roboto Condensed', sans-serif;}
-.Header h1{font-family: 'Satisfy', cursive;}
+.Header h1,.Header p.title{font-family: 'Satisfy', cursive;margin:0}
 a:link{color:#fff}
 a:visited{color:#fff}
 /* top */
@@ -249,7 +286,7 @@ blockquote{padding: 20px;margin: 16px 0px;position: relative;color:#fff;font-siz
 .share-post ul li{float: left;}
 .share-post ul li a{display: inline-block;color: #FFF;text-align: center;font-size: 12px;}
 .share-post .share-links .social-item.facebook {background: #3b5998}
-.share-post .share-links .social-item {padding: 4px 10px;box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1); cursor: pointer; margin-left: 5px; text-align: center;-webkit-transition: 0.2s;-o-transition: 0.2s;transition: 0.2s;}
+.share-post .share-links .social-item {padding: 4px 10px;box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1); cursor: pointer; margin-left: 5px; text-align: center;transition: 0.2s;}
 .mox-left-tags, .share-post{position: relative;display: block;width: 100%;padding: 5px 0px;}
 .share-post .share-links .social-item.twitter {background: #00aced}
 .share-post .share-links .social-item.google {background: #dd4b39}
@@ -411,7 +448,7 @@ body#layout .theme-opt .section{background: transparent !important;border: 0px !
 body#layout .theme-opt .section &gt; h4{font-size:14px;margin-left: 0px;}
 body#layout .theme-opt:before{content:  url(&quot;https://4.bp.blogspot.com/-w_OcVSzp_cM/WgxYE78QWHI/AAAAAAAABBY/GmK-TwZj1bM7KPAIaCLj-l4Tr7WhJOxkgCLcBGAs/s1600/clg.png&quot;);}
     </b:template-skin>
-    <script async='async' type='text/javascript'>
+    <script type='text/javascript'>
       //<![CDATA[
       //CSS Ready
 
@@ -423,6 +460,7 @@ body#layout .theme-opt:before{content:  url(&quot;https://4.bp.blogspot.com/-w_O
   </head>
 
   <body expr:class='data:blog.pageType'>
+<a class='skip-link' href='#photomag-main'>Skip to content</a>
 
     <div class='theme-opt' style='display:none'>
 <b:section class='naver-pixel' id='naver-pixel' maxwidgets='1' name='Navigation' preferred='no' showaddelement='no'>
@@ -530,18 +568,46 @@ user is not using shrink to fit then we expand the header.
                         <b:if cond='data:mobile'>
                           <div id='header-inner'>
                             <div class='titlewrapper' style='background: transparent'>
+                              <b:if cond='data:blog.url == data:blog.homepageUrl'>
+
                               <h1 class='title' style='background: transparent; border-width: 0px'>
+
                                 <b:include name='title'/>
+
                               </h1>
+
+                              <b:else/>
+
+                              <p class='title' style='background: transparent; border-width: 0px'>
+
+                                <b:include name='title'/>
+
+                              </p>
+
+                              </b:if>
                             </div>
                             <b:include name='description'/>
                           </div>
                           <b:else/>
                           <div expr:style='&quot;background-image: url(\&quot;&quot; + data:sourceUrl + &quot;\&quot;); &quot;                      + &quot;background-position: &quot;                      + data:backgroundPositionStyleStr + &quot;; &quot;                      + data:widthStyleStr                      + &quot;min-height: &quot; + data:height                      + &quot;_height: &quot; + data:height                      + &quot;background-repeat: no-repeat; &quot;' id='header-inner'>
                             <div class='titlewrapper' style='background: transparent'>
+                              <b:if cond='data:blog.url == data:blog.homepageUrl'>
+
                               <h1 class='title' style='background: transparent; border-width: 0px'>
+
                                 <b:include name='title'/>
+
                               </h1>
+
+                              <b:else/>
+
+                              <p class='title' style='background: transparent; border-width: 0px'>
+
+                                <b:include name='title'/>
+
+                              </p>
+
+                              </b:if>
                             </div>
                             <b:include name='description'/>
                           </div>
@@ -562,9 +628,23 @@ user is not using shrink to fit then we expand the header.
                       <!--No header image -->
                       <div id='header-inner'>
                         <div class='titlewrapper'>
+                          <b:if cond='data:blog.url == data:blog.homepageUrl'>
+
                           <h1 class='title'>
+
                             <b:include name='title'/>
+
                           </h1>
+
+                          <b:else/>
+
+                          <p class='title'>
+
+                            <b:include name='title'/>
+
+                          </p>
+
+                          </b:if>
                         </div>
                         <b:include name='description'/>
                       </div>
@@ -668,7 +748,7 @@ user is not using shrink to fit then we expand the header.
             </div>
 
             <div class='search smen'>
-              <a href='javascript:;' id='sidemenu'><i class='ion-android-menu'/></a>
+              <a aria-label='Open menu' href='javascript:;' id='sidemenu' role='button'><i class='ion-android-menu'/></a>
 
             </div>
           </div>
@@ -742,7 +822,7 @@ user is not using shrink to fit then we expand the header.
             <div class='blog-posts hfeed'>
 
               &lt;!-- <b:include data='top' name='status-message'/> --&gt;
-				<div class='row  ajaxed'>
+				<div class='row ajaxed' id='photomag-main' role='main'>
               <b:loop values='data:posts' var='post'>
 
                   <b:include data='post' name='post'/>
@@ -791,7 +871,7 @@ user is not using shrink to fit then we expand the header.
         <b:includable id='backlinkDeleteIcon' var='backlink'>
           <span expr:class='&quot;item-control &quot; + data:backlink.adminClass'>
             <a expr:href='data:backlink.deleteUrl' expr:title='data:top.deleteBacklinkMsg'>
-              <img src='https://resources.blogblog.com/img/icon_delete13.gif'/>
+              <img alt='' loading='lazy' src='https://resources.blogblog.com/img/icon_delete13.gif'/>
             </a>
           </span>
         </b:includable>
@@ -852,7 +932,7 @@ user is not using shrink to fit then we expand the header.
               </div>
               <b:else/>
               <a class='comment-delete' expr:href='data:comment.deleteUrl' expr:title='data:top.deleteCommentMsg'>
-                <img src='https://resources.blogblog.com/img/icon_delete13.gif'/>
+                <img alt='' loading='lazy' src='https://resources.blogblog.com/img/icon_delete13.gif'/>
               </a>
             </b:if>
           </span>
@@ -1042,7 +1122,7 @@ user is not using shrink to fit then we expand the header.
                   <b:if cond='data:post.thumbnailUrl'>
                     <div class='mobile-index-thumbnail'>
                       <div class='Image'>
-                        <img expr:src='data:post.thumbnailUrl'/>
+                        <img decoding='async' expr:alt='data:post.title' expr:src='data:post.thumbnailUrl' loading='lazy'/>
                       </div>
                     </div>
                   </b:if>
@@ -1132,6 +1212,23 @@ user is not using shrink to fit then we expand the header.
                       </b:if>
                     </h3>
                   </b:if>
+          <b:if cond='data:blog.pageType == &quot;item&quot;'>
+          <script type='application/ld+json'>
+          {
+            "@context": "https://schema.org",
+            "@type": "BlogPosting",
+            "mainEntityOfPage": { "@type": "WebPage", "@id": "<data:post.url/>" },
+            "headline": "<data:post.title/>",
+            <b:if cond='data:post.firstImageUrl'>"image": "<data:post.firstImageUrl/>",</b:if>
+            "datePublished": "<data:post.timestampISO8601/>",
+            "dateModified": "<data:post.lastUpdatedISO8601/>",
+            "author": { "@type": "Person", "name": "<data:post.author/>" },
+            "publisher": { "@type": "Organization", "name": "<data:blog.title/>" },
+            "url": "<data:post.url/>"
+          }
+          </script>
+          </b:if>
+
 
                   <div class='post-header'>
                     <div class='post-header-line-1'/>
@@ -1228,7 +1325,7 @@ user is not using shrink to fit then we expand the header.
                 <div class='thumbnails'>
 
                   <b:if cond='data:post.firstImageUrl'>
-                    &lt;div class=&quot;thumb-img&quot; style=&quot;background:url(&#39;<data:post.firstImageUrl/>&#39;);&quot;&gt;
+                    &lt;div class=&quot;thumb-img&quot; style=&quot;background:url(&#39;<b:eval expr='resizeImage(data:post.firstImageUrl, 800)'/>&#39;);&quot;&gt;
                     <b:else/>
                     &lt;div class=&quot;thumb-img&quot; style=&quot;background:url(&#39;https://4.bp.blogspot.com/-wPwjv7-YYGY/Wc98wlDT8qI/AAAAAAAAAEE/mH8YkPl8qJAH9FMuFKcShQvXXYMmVyrIgCLcBGAs/s1600/notfound.png&#39;);background-color:#000&quot;&gt;
                   </b:if>
@@ -1257,7 +1354,7 @@ user is not using shrink to fit then we expand the header.
                 <div class='thumbnails'>
 
                   <b:if cond='data:post.firstImageUrl'>
-                    &lt;div class=&quot;thumb-img&quot; style=&quot;background:url(&#39;<data:post.firstImageUrl/>&#39;);&quot;&gt;
+                    &lt;div class=&quot;thumb-img&quot; style=&quot;background:url(&#39;<b:eval expr='resizeImage(data:post.firstImageUrl, 800)'/>&#39;);&quot;&gt;
                     <b:else/>
                     &lt;div class=&quot;thumb-img&quot; style=&quot;background:url(&#39;https://4.bp.blogspot.com/-wPwjv7-YYGY/Wc98wlDT8qI/AAAAAAAAAEE/mH8YkPl8qJAH9FMuFKcShQvXXYMmVyrIgCLcBGAs/s1600/notfound.png&#39;);background-color:#000&quot;&gt;
                   </b:if>
@@ -1285,7 +1382,7 @@ user is not using shrink to fit then we expand the header.
                 <div class='thumbnails absz'>
 
                   <b:if cond='data:post.firstImageUrl'>
-                    &lt;div class=&quot;thumb-img fullht-f&quot; style=&quot;background:url(&#39;<data:post.firstImageUrl/>&#39;);&quot;&gt;
+                    &lt;div class=&quot;thumb-img fullht-f&quot; style=&quot;background:url(&#39;<b:eval expr='resizeImage(data:post.firstImageUrl, 800)'/>&#39;);&quot;&gt;
                     <b:else/>
                     &lt;div class=&quot;thumb-img fullht-f&quot; style=&quot;background:url(&#39;https://4.bp.blogspot.com/-wPwjv7-YYGY/Wc98wlDT8qI/AAAAAAAAAEE/mH8YkPl8qJAH9FMuFKcShQvXXYMmVyrIgCLcBGAs/s1600/notfound.png&#39;);background-color:#000&quot;&gt;
                   </b:if>
@@ -1657,7 +1754,7 @@ user is not using shrink to fit then we expand the header.
               </p>
             </b:if>
             <b:if cond='data:showFirstImage and data:postFirstImage != &quot;&quot;'>
-              <img class='image' expr:src='data:postFirstImage'/>
+              <img alt='' class='image' expr:src='data:postFirstImage' loading='lazy'/>
             </b:if>
           </div>
 
@@ -1768,7 +1865,7 @@ user is not using shrink to fit then we expand the header.
   </b:loop>
 </b:includable>
             <b:includable id='menu' var='data'>
-  <select expr:id='data:widget.instanceId + &quot;_ArchiveMenu&quot;'>
+  <select expr:aria-label='data:title' expr:id='data:widget.instanceId + &quot;_ArchiveMenu&quot;'>
     <option value=''><data:title/></option>
     <b:loop values='data:data' var='i'>
       <option expr:value='data:i.url'><data:i.name/> (<data:i.post-count/>)</option>
@@ -1958,7 +2055,7 @@ user is not using shrink to fit then we expand the header.
   </b:loop>
 </b:includable>
                   <b:includable id='menu' var='data'>
-  <select expr:id='data:widget.instanceId + &quot;_ArchiveMenu&quot;'>
+  <select expr:aria-label='data:title' expr:id='data:widget.instanceId + &quot;_ArchiveMenu&quot;'>
     <option value=''><data:title/></option>
     <b:loop values='data:data' var='i'>
       <option expr:value='data:i.url'><data:i.name/> (<data:i.post-count/>)</option>
