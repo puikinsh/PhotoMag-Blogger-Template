@@ -16,17 +16,15 @@
 
 <!--META-->
 	<meta charset='utf-8'/>
-	<meta content='width' name='MobileOptimized'/>
-	<meta content='true' name='HandheldFriendly'/>
-	<meta content='yes' name='apple-mobile-web-app-capable'/>
-	<meta content='index,nofollow' name='robots'/>
-	 <meta content='width=device-width, initial-scale=1, maximum-scale=1' name='viewport'/>
+	 <meta content='width=device-width, initial-scale=1' name='viewport'/>
 
 	<!-- Blogger main head data and meta -->
     <b:include data='blog' name='all-head-content'/>
 
-    <link href='https://fonts.googleapis.com/css?family=Roboto+Condensed:300,400,700|Satisfy' rel='stylesheet'/>
-    <link href='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css' rel='stylesheet'/>
+    <link href='https://fonts.googleapis.com/css?family=Roboto+Condensed:300,400,700|Satisfy&amp;display=swap' rel='stylesheet'/>
+    <link crossorigin='anonymous' href='https://cdn.jsdelivr.net' rel='preconnect'/>
+    <link href='https://fonts.googleapis.com' rel='preconnect'/>
+    <link crossorigin='anonymous' href='https://fonts.gstatic.com' rel='preconnect'/>
 
     <b:skin><![CDATA[
 /* Variable definitions
@@ -37,6 +35,29 @@
      <Variable name="header.background.color" description="Header Background" type="color" default="transparent" value="#cc6611"/>
    </Group>
 */
+
+/* Bootstrap replacement - only the pieces this template actually uses
+----------------------------------------------------------------------- */
+*,*::before,*::after{box-sizing:border-box}
+button,input,select,textarea{font-family:inherit;font-size:100%;margin:0}
+.container{width:100%;padding-right:15px;padding-left:15px;margin-right:auto;margin-left:auto}
+@media (min-width:576px){.container{max-width:540px}}
+@media (min-width:768px){.container{max-width:720px}}
+@media (min-width:992px){.container{max-width:960px}}
+@media (min-width:1200px){.container{max-width:1140px}}
+.row{display:flex;flex-wrap:wrap;margin-right:-15px;margin-left:-15px}
+.row>*{flex-shrink:0;width:100%;max-width:100%;padding-right:15px;padding-left:15px}
+.col-sm-12{flex:0 0 auto;width:100%}
+@media (min-width:768px){.col-md-6{flex:0 0 auto;width:50%}}
+.list-inline,.list-unstyled{padding-left:0;list-style:none}
+.list-inline li{display:inline-block;list-style:none}
+@keyframes photomagFadeIn{from{opacity:0}to{opacity:1}}
+.skip-link{position:absolute;left:-9999px;top:0;background:#000;color:#fff!important;padding:10px 16px;z-index:100000}
+.skip-link:focus{left:0}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+#slider_main.swiper .swiper-pagination-bullet{background:#fff;opacity:.5}
+#slider_main.swiper .swiper-pagination-bullet-active{opacity:1}
+
 /*GLBL*/
 html,body{height:100%;}
 body{background: #000;color:#fff;font-family: 'Roboto Condensed', sans-serif;}
@@ -139,7 +160,6 @@ h1.title a{color: #fff}
  * Copyright 2013-2017 David Deutsch
  * Licensed under  ()
  */
-.owl-carousel,.owl-carousel .owl-item{-webkit-tap-highlight-color:transparent;position:relative}.owl-carousel{display:none;width:100%;z-index:1}.owl-carousel .owl-stage{position:relative;-ms-touch-action:pan-Y;-moz-backface-visibility:hidden}.owl-carousel .owl-stage:after{content:".";display:block;clear:both;visibility:hidden;line-height:0;height:0}.owl-carousel .owl-stage-outer{position:relative;overflow:hidden;-webkit-transform:translate3d(0,0,0)}.owl-carousel .owl-item,.owl-carousel .owl-wrapper{-webkit-backface-visibility:hidden;-moz-backface-visibility:hidden;-ms-backface-visibility:hidden;-webkit-transform:translate3d(0,0,0);-moz-transform:translate3d(0,0,0);-ms-transform:translate3d(0,0,0)}.owl-carousel .owl-item{min-height:1px;float:left;-webkit-backface-visibility:hidden;-webkit-touch-callout:none}.owl-carousel .owl-item img{display:block;width:100%}.owl-carousel .owl-dots.disabled,.owl-carousel .owl-nav.disabled{display:none}.no-js .owl-carousel,.owl-carousel.owl-loaded{display:block}.owl-carousel .owl-dot,.owl-carousel .owl-nav .owl-next,.owl-carousel .owl-nav .owl-prev{cursor:pointer;cursor:hand;-webkit-user-select:none;-khtml-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}.owl-carousel.owl-loading{opacity:0;display:block}.owl-carousel.owl-hidden{opacity:0}.owl-carousel.owl-refresh .owl-item{visibility:hidden}.owl-carousel.owl-drag .owl-item{-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}.owl-carousel.owl-grab{cursor:move;cursor:grab}.owl-carousel.owl-rtl{direction:rtl}.owl-carousel.owl-rtl .owl-item{float:right}.owl-carousel .animated{animation-duration:1s;animation-fill-mode:both}.owl-carousel .owl-animated-in{z-index:0}.owl-carousel .owl-animated-out{z-index:1}.owl-carousel .fadeOut{animation-name:fadeOut}@keyframes fadeOut{0%{opacity:1}100%{opacity:0}}.owl-height{transition:height .5s ease-in-out}.owl-carousel .owl-item .owl-lazy{opacity:0;transition:opacity .4s ease}.owl-carousel .owl-item img.owl-lazy{transform-style:preserve-3d}.owl-carousel .owl-video-wrapper{position:relative;height:100%;background:#000}.owl-carousel .owl-video-play-icon{position:absolute;height:80px;width:80px;left:50%;top:50%;margin-left:-40px;margin-top:-40px;background:url(owl.video.play.png) no-repeat;cursor:pointer;z-index:1;-webkit-backface-visibility:hidden;transition:transform .1s ease}.owl-carousel .owl-video-play-icon:hover{-ms-transform:scale(1.3,1.3);transform:scale(1.3,1.3)}.owl-carousel .owl-video-playing .owl-video-play-icon,.owl-carousel .owl-video-playing .owl-video-tn{display:none}.owl-carousel .owl-video-tn{opacity:0;height:100%;background-position:center center;background-repeat:no-repeat;background-size:contain;transition:opacity .4s ease}.owl-carousel .owl-video-frame{position:relative;z-index:1;height:100%;width:100%}
 
 
 /*slider*/
@@ -147,10 +167,6 @@ h1.title a{color: #fff}
 .slide{display: block;height: 100vh;}
 .slide-wrapper{height: 100%;}
 .slide-wrapper{background-size:cover !important;background-position: center center !important;}
-.owl-dots{position: relative;margin-top:-29px;height:10px;text-align:center;}
-.owl-dot{display: inline-block;height: 3px;width: 20px;background:rgba(255,255,255,0.5);margin:10px 3px;margin-right:3px;transition:.2s all ease-in-out;}
-.owl-dot:hover{background: #fff;transition:.2s all ease-in-out;}
-.owl-dot.active{background: #fff;}
 .slide-inner{position: absolute;top: 50%;left: 50%;-moz-transform: translate(-50%, -50%);-ms-transform: translate(-50%, -50%);-webkit-transform: translate(-50%, -50%);-o-transform: translate(-50%, -50%);transform: translate(-50%, -50%);padding:20px;background: rgba(0,0,0,0.6);width: 100%;min-width: 280px;max-width: 500px;text-align: center;}
 .slide-inner .slide-category a{font-size:12px;text-transform: uppercase;}
 article.post{padding: 0px;text-align:center;position:relative;}
@@ -217,9 +233,6 @@ article.post h3 a:hover{color: #fff;}
 .meta-det > div{display: inline;width: auto;padding:0px 10px;}
 
 
-.FollowByEmail input.follow-by-email-address{text-align:center;border:0px solid #000 !important;height: auto !important;padding: 10px;font-family: 'Roboto Condensed', sans-serif;letter-spacing: 1px;font-size:15px !important;width: 100% !important;}
-.FollowByEmail input.follow-by-email-submit{background: rgba(255,255,255,0.3) !important;height: auto !important;padding: 13px 0px;border-radius: 0px !important;margin-left: 0px !important;text-transform:uppercase;font-size:11px !important;width:100% !important;font-weight:400;font-family: 'Roboto Condensed', sans-serif;letter-spacing: 2px;}
-.FollowByEmail td{width: 100% !important;display:block;}
 .Label .widget-content ul{list-style-type: none;padding: 0px;}
 .Label .widget-content ul li{float: left}
 .Label .widget-content ul li a{text-transform: uppercase;margin: 4px 6px;padding: 3px 5px;border: 1px solid rgba(255,255,255,0.6)}
@@ -405,8 +418,8 @@ body#layout .theme-opt:before{content:  url(&quot;https://4.bp.blogspot.com/-w_O
       //CSS Ready
 
       function loadCSS(e,t,n){"use strict";var i=window.document.createElement("link");var o=t||window.document.getElementsByTagName("script")[0];i.rel="stylesheet";i.href=e;i.media="only x";o.parentNode.insertBefore(i,o);setTimeout(function(){i.media=n||"all"})}
-      loadCSS("//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css");
-      loadCSS("//code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css");
+      loadCSS("https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css");
+      loadCSS("https://cdn.jsdelivr.net/npm/ionicons@2.0.1/css/ionicons.min.css");
       //]]>
     </script>
   </head>
@@ -439,7 +452,7 @@ body#layout .theme-opt:before{content:  url(&quot;https://4.bp.blogspot.com/-w_O
     <b:section class='post-author-widget' id='Postwidegt1' maxwidgets='1' name='Post Author Details' preferred='no' showaddelement='no'>
       <b:widget id='HTML994' locked='true' title='Author Details' type='HTML' version='1'>
         <b:widget-settings>
-          <b:widget-setting name='content'>Hey there, We are Blossom Themes! We are trying to provide you the new way to look and use the blogger templates. Our designers are working hard and pushing the boundaries of possibilities to widen the horizon of the regular templates and provide high quality blogger templates to all hardworking bloggers!</b:widget-setting>
+          <b:widget-setting name='content'>Hey there! We are Colorlib, crafting beautiful free website templates and themes since 2013. Our designers push the boundaries to deliver high quality templates for bloggers, businesses, and creatives worldwide!</b:widget-setting>
         </b:widget-settings>
         <b:includable id='main'>
           <!-- only display title if it's non-empty -->
@@ -641,32 +654,6 @@ user is not using shrink to fit then we expand the header.
                     </li>
                     <li class='subscribe'>
                       <b:section id='subwid'>
-                        <b:widget id='FollowByEmail1' locked='false' title='Follow by Email' type='FollowByEmail' version='1'>
-                          <b:includable id='main'>
-                            <b:if cond='data:title != &quot;&quot;'><h2 class='title'><data:title/></h2></b:if>
-                            <div class='widget-content'>
-                              <div class='follow-by-email-inner'>
-                                <form action='https://feedburner.google.com/fb/a/mailverify' expr:onsubmit='&quot;window.open(\&quot;https://feedburner.google.com/fb/a/mailverify?uri=&quot; + data:feedPath + &quot;\&quot;, \&quot;popupwindow\&quot;, \&quot;scrollbars=yes,width=550,height=520\&quot;); return true&quot;' method='post' target='popupwindow'>
-                                  <table width='100%'>
-                                    <tr>
-                                      <td>
-                                        <input class='follow-by-email-address' name='email' placeholder='Email address...' type='text'/>
-                                      </td>
-                                      <td width='64px'>
-                                        <input class='follow-by-email-submit' type='submit' value='Submit'/>
-                                      </td>
-                                    </tr>
-                                  </table>
-                                  <input expr:value='data:feedPath' name='uri' type='hidden'/>
-                                  <input name='loc' type='hidden' value='en_US'/>
-                                </form>
-                              </div>
-                            </div>
-                            <span class='item-control blog-admin'>
-                              <b:include name='quickedit'/>
-                            </span>
-                          </b:includable>
-                        </b:widget>
                       </b:section>
                     </li>
                   </ul>
@@ -1332,7 +1319,7 @@ user is not using shrink to fit then we expand the header.
                 <div class='count-share'>
                   <ul class='social-icons list-unstyled list-inline'>
                     <li class='social-item facebook'>
-                      <a class='post_share_facebook facebook' expr:href='&quot;http://www.facebook.com/sharer.php?u=&quot; + data:post.url' onclick='javascript:window.open(this.href,&apos;&apos;, &apos;menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=220,width=600&apos;);return false;' title='facebook'>
+                      <a class='post_share_facebook facebook' expr:href='&quot;https://www.facebook.com/sharer.php?u=&quot; + data:post.url' onclick='javascript:window.open(this.href,&apos;&apos;, &apos;menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=220,width=600&apos;);return false;' title='facebook'>
                         <i class='fa fa-facebook'>
                         </i> facebook
                       </a>
@@ -1343,13 +1330,7 @@ user is not using shrink to fit then we expand the header.
                         </i> twitter
                       </a>
                     </li>
-                    <li class='social-item google'>
-                      <a class='googleplus' expr:href='&quot;https://plus.google.com/share?url=&quot; + data:post.url' onclick='javascript:window.open(this.href,&apos;&apos;, &apos;menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600&apos;);return false;' title='google +'>
-                        <i class='fa fa-google-plus'>
-                        </i> google+
-                      </a>
-                    </li>
-                  </ul>
+                    </ul>
                 </div>
               </div>
                 <br/>
@@ -1362,7 +1343,7 @@ user is not using shrink to fit then we expand the header.
                       <div class='author-content'>
                         <div class='top-author'>
                           <h5>
-                            <a expr:href='data:post.authorUrl' rel='author' title='Posts by Diago'><data:post.author/>
+                            <a expr:href='data:post.authorUrl' rel='author' expr:title='&quot;Posts by &quot; + data:post.author'><data:post.author/>
                             </a>
                           </h5>
                         </div>
@@ -1651,32 +1632,6 @@ user is not using shrink to fit then we expand the header.
         <div class='sbar_close'><a class='sb_cls'><i class='ion-close-round'/></a></div>
 
         <b:section class='sbars' id='sbars' name='Sidebar' showaddelemet='yes'>
-          <b:widget id='FollowByEmail2' locked='false' title='Follow by Email' type='FollowByEmail'>
-            <b:includable id='main'>
-  <b:if cond='data:title != &quot;&quot;'><h2 class='title'><data:title/></h2></b:if>
-  <div class='widget-content'>
-    <div class='follow-by-email-inner'>
-      <form action='https://feedburner.google.com/fb/a/mailverify' expr:onsubmit='&quot;window.open(\&quot;https://feedburner.google.com/fb/a/mailverify?uri=&quot; + data:feedPath + &quot;\&quot;, \&quot;popupwindow\&quot;, \&quot;scrollbars=yes,width=550,height=520\&quot;); return true&quot;' method='post' target='popupwindow'>
-        <table width='100%'>
-          <tr>
-            <td>
-              <input class='follow-by-email-address' name='email' placeholder='Email address...' type='text'/>
-            </td>
-            <td width='64px'>
-              <input class='follow-by-email-submit' type='submit' value='Submit'/>
-            </td>
-          </tr>
-        </table>
-        <input expr:value='data:feedPath' name='uri' type='hidden'/>
-        <input name='loc' type='hidden' value='en_US'/>
-      </form>
-    </div>
-  </div>
-  <span class='item-control blog-admin'>
-    <b:include name='quickedit'/>
-  </span>
-</b:includable>
-          </b:widget>
           <b:widget id='FeaturedPost1' locked='false' title='Featured Post' type='FeaturedPost' version='1'>
             <b:widget-settings>
               <b:widget-setting name='showSnippet'>true</b:widget-setting>
