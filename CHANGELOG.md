@@ -2,6 +2,17 @@
 
 All notable changes to the PhotoMag Blogger Template are documented in this file.
 
+## [2.2.0] - 2026-06-12
+
+Stability and polish release: layout regressions fixed, menus made instant and reliable, typography refined, and accessibility tightened.
+
+- **Grid fix** — the Bootstrap-replacement CSS now matches Bootstrap 4 semantics exactly (column scoping via `:where()`), fixing collapsed header layouts and mega menu items stacking at full width
+- **Header, search, and contact form fixes** — restored the logo/menu header layout, removed a double icon in the search overlay, and gave the footer contact form proper field sizing
+- **Accessibility/SEO** — every image, server-rendered or JavaScript-generated, now carries an alt attribute (post covers use the post title, ads and avatars are labeled appropriately)
+- **Author bio fix** — a default avatar shows when the post author has no Google profile photo, instead of a broken image
+- **Self-updating footer copyright year** (with 2026 fallback) and removal of leftover Owl Carousel license comments
+- **Documentation** — README rebuilt with a live preview screenshot and a cross-linked gallery of all nine Colorlib Blogger templates
+
 ## [2.1.0] - 2026-06-11
 
 ### Changed
