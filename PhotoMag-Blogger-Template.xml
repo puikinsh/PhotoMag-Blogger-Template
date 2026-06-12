@@ -992,7 +992,7 @@ user is not using shrink to fit then we expand the header.
                   <b:loop values='data:post.comments' var='comment'>
                     <dt expr:class='&quot;comment-author &quot; + data:comment.authorClass' expr:id='data:comment.anchorName'>
                       <b:if cond='data:comment.favicon'>
-                        <img expr:src='data:comment.favicon' height='16px' style='margin-bottom:-2px;' width='16px'/>
+                        <img alt='' expr:src='data:comment.favicon' height='16px' loading='lazy' style='margin-bottom:-2px;' width='16px'/>
                       </b:if>
                       <a expr:name='data:comment.anchorName'/>
                       <b:if cond='data:blog.enabledCommentProfileImages'>
