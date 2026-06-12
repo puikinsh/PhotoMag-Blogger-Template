@@ -203,12 +203,6 @@ h1.title a{color: #fff}
 .pixel-social .yahoo:before{content:"\f19e";}
 .pixel-social .reddit:before{content:"\f281";}
 
-/*OWL*/
-/**
- * Owl Carousel v2.2.1
- * Copyright 2013-2017 David Deutsch
- * Licensed under  ()
- */
 
 
 /*slider*/
@@ -2105,7 +2099,7 @@ user is not using shrink to fit then we expand the header.
       <div class='container-fluid cpyin'>
         <div class='row cpyr'>
           <div class='col-sm-12 text-center'>
-            <span>(C) Copyright 2018, All rights resrved <a expr:href='data:blog.homepageUrl'><data:blog.title/></a>. Template by <a href="https://colorlib.com/wp/" target="_blank">colorlib</a></span>
+            <span>(C) Copyright <span class='copyright-year'>2026</span>, All rights reserved <a expr:href='data:blog.homepageUrl'><data:blog.title/></a>. Template by <a href="https://colorlib.com/wp/" target="_blank">Colorlib</a></span>
           </div>
         </div>
       </div>
@@ -2385,5 +2379,10 @@ document.querySelectorAll(".Label a, .pixel-max-limit").forEach(function (a) {
 });
 //]]>
 </script>
-  </body>
+  <script>
+//<![CDATA[
+document.querySelectorAll(".copyright-year").forEach(function (el) { el.textContent = new Date().getFullYear(); });
+//]]>
+</script>
+</body>
 </html>
