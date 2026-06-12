@@ -2,6 +2,18 @@
 
 All notable changes to the PhotoMag Blogger Template are documented in this file.
 
+## [Unreleased]
+
+Post-2.2.0 PhotoMag layout fixes (gathered for the next release).
+
+- **Invisible hero slider fixed** — the slider container is now viewport-anchored and slides carry an ID-scoped `100vh`, so the fullscreen photo and centered title card render instead of a black void (Swiper's late-loading `.swiper-slide{height:100%}` was collapsing them to zero height)
+- **Link underlines removed** — restored the `a{text-decoration:none}` reset the template relied on
+- **Top bar share toggle centered** — the share icon flex-centers within the bar height
+- **Slide-out drawer styled** — uppercase widget headings with separators, a featured-post card with gradient overlay, floated popular-post thumbnails, list resets, and a bordered close button replace the previously near-unstyled raw HTML
+- **Main navigation menu restored** — the vanilla menu builder now re-shows the nav widget (the `#pixel-menu > div{display:none}` guard was hiding it because the jQuery `display:block!important` reveal was dropped in the rewrite) and tags submenu parents with `parent` so dropdowns open on hover (the rewrite was adding an unused `hasSubmenu` class)
+- **Header social icon aligned** — the share toggle is vertically centered and in line with the search and hamburger icons (the earlier fix targeted `.social-share > a`, but the anchor is nested as `.social-share > ul > li > a`, so it never matched)
+- **Footer widgets styled** — Popular Posts get floated thumbnails with titles and snippets, Labels render as bordered pills, and Blog Archive gets a clean indented hierarchy with toggles and post counts
+
 ## [2.2.0] - 2026-06-12
 
 Stability and polish release: layout regressions fixed, menus made instant and reliable, typography refined, and accessibility tightened.
