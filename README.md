@@ -1,6 +1,6 @@
 # PhotoMag — Free Photography Blogger Template
 
-[![Version](https://img.shields.io/badge/Version-2.2.0-111111.svg)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/Version-2.3.0-111111.svg)](CHANGELOG.md)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![Vanilla JS](https://img.shields.io/badge/Vanilla_JS-zero_frameworks-F7DF1E?logo=javascript&logoColor=black)](http://vanilla-js.com/)
 [![Font Awesome](https://img.shields.io/badge/Font%20Awesome-7-528DD7?logo=fontawesome&logoColor=white)](https://fontawesome.com/)
@@ -11,7 +11,11 @@ Created and maintained by [Colorlib](https://colorlib.com), PhotoMag is a dark, 
 
 [![PhotoMag — free photography Blogger template (Blogspot theme) by Colorlib](https://colorlib.com/wp/wp-content/uploads/sites/2/photomag-fullscreen-website-template.jpg)](https://photomag-preview.blogspot.com)
 
-**[Live Demo](https://photomag-preview.blogspot.com)** | **[Download ZIP](https://github.com/puikinsh/PhotoMag-Blogger-Template/archive/refs/heads/master.zip)** | **[Changelog](CHANGELOG.md)**
+**[Live Demo](https://photomag-preview.blogspot.com)** | **[Download ZIP](https://github.com/puikinsh/PhotoMag-Blogger-Template/releases/latest/download/photomag-blogger-template.zip)** | **[Changelog](CHANGELOG.md)**
+
+## Maintenance and validation
+
+Version 2.3.0 fixes pagination fallback, structured data, mobile content overflow and shared widget regressions. See the [upgrade guide](docs/UPGRADING.md), [audit record](docs/AUDIT-2026.md) and [contributor checks](CONTRIBUTING.md).
 
 ## Features
 
@@ -21,7 +25,7 @@ Created and maintained by [Colorlib](https://colorlib.com), PhotoMag is a dark, 
 - **Slide-out navigation** - menu and widgets behind a clean hamburger toggle
 - **Sticky top menu** - appears as readers scroll down
 - **Popular posts widget** - with automatic thumbnails
-- **SEO-optimized markup** — exactly one `h1` per page, JSON-LD structured data (`WebSite`, `SearchAction`, `BlogPosting`), Open Graph and Twitter card meta tags, semantic landmarks
+- **SEO-optimized markup** — exactly one `h1` per page, JSON-LD structured data (`WebSite`, `BlogPosting`), Open Graph and Twitter card meta tags, semantic landmarks
 - **Fast page load** — zero jQuery, zero CSS frameworks, no render-blocking external assets, preconnect hints, native lazy loading, and right-sized images served by Blogger's CDN
 - **Accessible** — skip-to-content link, labeled controls, ARIA tab roles, keyboard-friendly navigation, and no user-zoom blocking
 - **Easy color customization** — change the color scheme from Blogger's theme editor, no code required
@@ -30,7 +34,7 @@ Created and maintained by [Colorlib](https://colorlib.com), PhotoMag is a dark, 
 
 ## How to Install a Blogger Template
 
-1. **Download** the [ZIP](https://github.com/puikinsh/PhotoMag-Blogger-Template/archive/refs/heads/master.zip) or clone this repository
+1. **Download** the [ZIP](https://github.com/puikinsh/PhotoMag-Blogger-Template/releases/latest/download/photomag-blogger-template.zip) or clone this repository
 2. **Sign in to Blogger** at [blogger.com](https://www.blogger.com) and pick your blog
 3. **Open the theme editor** — *Theme* → *Customize* dropdown → **Edit HTML**
 4. **Replace the code** — select everything, delete it, and paste the full contents of `PhotoMag-Blogger-Template.xml`

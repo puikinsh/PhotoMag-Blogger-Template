@@ -3,7 +3,7 @@
 <!--
 =============================================================
  PhotoMag - Free Photography Blogger Template
- Version: 2.2.0
+ Version: 2.3.0
  Author: Colorlib (https://colorlib.com)
  Demo: https://photomag-preview.blogspot.com
  License: GPL v3 (https://www.gnu.org/licenses/gpl-3.0)
@@ -31,19 +31,9 @@
     <b:include data='blog' name='all-head-content'/>
 
     <!-- Social sharing meta -->
-    <meta expr:content='data:blog.pageTitle' property='og:title'/>
-    <b:if cond='data:blog.pageType == &quot;item&quot;'>
-    <meta content='article' property='og:type'/>
-    <b:else/>
-    <meta content='website' property='og:type'/>
-    </b:if>
-    <meta expr:content='data:blog.canonicalUrl' property='og:url'/>
-    <b:if cond='data:blog.postImageUrl'>
-    <meta expr:content='data:blog.postImageUrl' property='og:image'/>
-    </b:if>
-    <b:if cond='data:blog.metaDescription'>
-    <meta expr:content='data:blog.metaDescription' property='og:description'/>
-    </b:if>
+
+
+
     <meta content='summary_large_image' name='twitter:card'/>
     <meta expr:content='data:blog.pageTitle' name='twitter:title'/>
     <b:if cond='data:blog.postImageUrl'>
@@ -57,11 +47,11 @@
     {
       "@context": "https://schema.org",
       "@type": "WebSite",
-      "name": "<data:blog.title/>",
-      "url": "<data:blog.homepageUrl/>",
+      "name": "<data:blog.title.jsonEscaped/>",
+      "url": "<data:blog.homepageUrl.jsonEscaped/>",
       "potentialAction": {
         "@type": "SearchAction",
-        "target": "<data:blog.homepageUrl/>search?q={search_term_string}",
+        "target": "<data:blog.homepageUrl.jsonEscaped/>search?q={search_term_string}",
         "query-input": "required name=search_term_string"
       }
     }
@@ -481,6 +471,24 @@ a{text-decoration:none}
 .footer-inner #ArchiveList ul.posts li{padding:3px 0}
 .footer-inner .widget-content,.footer-inner .widget-content p{font-size:12px;letter-spacing:1px;line-height:1.7}
 
+
+/* Resilient navigation and narrow post content */
+#blog-pager,#shutter-pager{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px;clear:both}
+.colorlib-numbers{display:inline-flex;flex-wrap:wrap;justify-content:center;gap:6px;max-width:100%}
+.colorlib-numbers>a,.colorlib-numbers>button,.colorlib-numbers>[aria-current],.colorlib-loadmore{display:inline-flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;padding:8px 12px;border:1px solid currentColor;border-radius:3px;background:transparent;color:inherit;font:inherit;line-height:1.4;cursor:pointer}
+.colorlib-numbers>[aria-current]{font-weight:bold;cursor:default}
+.colorlib-numbers button:disabled{opacity:.55;cursor:wait}
+#blog-pager [hidden],#shutter-pager [hidden]{display:none!important}
+.colorlib-numbers a:focus-visible,.colorlib-numbers button:focus-visible,.colorlib-loadmore:focus-visible{outline:2px solid currentColor;outline-offset:3px}
+.post-body{min-width:0;overflow-wrap:anywhere}
+.post-body img,.post-body video,.post-body iframe{max-width:100%}
+.post-body pre{max-width:100%;overflow-x:auto;white-space:pre}
+.post-body table{display:block;max-width:100%;overflow-x:auto}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto!important}*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+
+body{margin:0}
+.ajaxed,.row.cpyr{margin-left:0;margin-right:0}
+
 ]]></b:skin>
 
     <b:template-skin>
@@ -513,7 +521,109 @@ body#layout .theme-opt:before{content:  url(&quot;https://4.bp.blogspot.com/-w_O
       loadCSS("https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.2.0/css/all.min.css");
       //]]>
     </script>
-  </head>
+  <script type='text/javascript'>
+//<![CDATA[
+// Progressive pagination: Blogger's server-rendered links remain the fallback.
+function colorlibLimitUrl(href, size) {
+  try {
+    var url = new URL(href, location.href);
+    if (url.origin === location.origin && url.pathname.indexOf('/search/label/') === 0 &&
+        !url.searchParams.has('max-results') && Number.isSafeInteger(Number(size)) && Number(size) > 0) {
+      url.searchParams.set('max-results', size);
+    }
+    return url.href;
+  } catch (_) { return href; }
+}
+
+function colorlibText(value) {
+  return String(value == null ? '' : value).replace(/&/g, '&amp;').replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
+function colorlibInfinitePager(config) {
+  if (document.body.classList.contains('item') || document.body.classList.contains('static_page')) return;
+  var container = document.querySelector(config.container), pager = document.querySelector(config.pager);
+  var older = pager && pager.querySelector(config.older);
+  if (!container || !older || pager.querySelector('.colorlib-loadmore')) return;
+  var next = older.href, loading = false, automatic = 0, failed = false, visited = new Set();
+  function postKey(post) {
+    var link = post.querySelector('.post-title a,.entry-title a,a[rel="bookmark"]');
+    return link ? new URL(link.getAttribute('href'), location.href).href.split('#')[0] : '';
+  }
+  var seen = new Set(Array.from(container.querySelectorAll(config.posts)).map(postKey).filter(Boolean));
+  var button = document.createElement('button');
+  button.type = 'button';
+  button.className = 'colorlib-loadmore';
+  button.textContent = 'Load more posts';
+  var status = document.createElement('span');
+  status.className = 'sr-only';
+  status.setAttribute('role', 'status');
+  status.setAttribute('aria-live', 'polite');
+  pager.appendChild(button);
+  pager.appendChild(status);
+  older.hidden = true;
+  function loadMore(manual) {
+    if (loading || !next || failed || (!manual && (!config.automatic || automatic >= 3))) return;
+    var target;
+    try { target = new URL(next, location.href); } catch (_) { return fallback(); }
+    if (target.origin !== location.origin || visited.has(target.href)) return fallback();
+    loading = true;
+    button.disabled = true;
+    pager.setAttribute('aria-busy', 'true');
+    status.textContent = 'Loading posts';
+    var controller = new AbortController();
+    var timer = setTimeout(function () { controller.abort(); }, 15000);
+    fetch(target.href, {signal: controller.signal}).then(function (r) {
+      if (!r.ok) throw new Error('Page unavailable');
+      return r.text();
+    }).then(function (text) {
+      var doc = new DOMParser().parseFromString(text, 'text/html');
+      var fresh = doc.querySelector(config.container);
+      var posts = fresh && Array.from(fresh.querySelectorAll(config.posts));
+      if (!posts || !posts.length) throw new Error('No post content');
+      posts = posts.filter(function (post) { var key = postKey(post); return !key || !seen.has(key); });
+      if (!posts.length) throw new Error('Repeated posts');
+      var nextLink = doc.querySelector(config.pager + ' ' + config.older);
+      var following = nextLink ? new URL(nextLink.getAttribute('href'), target.href) : null;
+      if (following && (following.origin !== location.origin || following.href === target.href || visited.has(following.href))) throw new Error('Repeated page');
+      posts.forEach(function (post) {
+        post.querySelectorAll('script').forEach(function (script) { script.remove(); });
+        // Only post wrappers are imported; page widgets and ad scripts stay on their page.
+        container.appendChild(document.importNode(post, true));
+        var key = postKey(post);
+        if (key) seen.add(key);
+      });
+      visited.add(target.href);
+      next = following ? following.href : '';
+      if (next) older.href = next;
+      else older.remove();
+      if (config.after) config.after(container, posts);
+      button.hidden = !next;
+      var count = posts.reduce(function (sum, post) { return sum + (post.matches('article') ? 1 : post.querySelectorAll('article').length || 1); }, 0);
+      status.textContent = count + ' posts loaded' + (!next ? '. No more posts.' : '');
+      if (!manual) automatic++;
+    }).catch(fallback).finally(function () {
+      clearTimeout(timer);
+      loading = false;
+      button.disabled = false;
+      pager.removeAttribute('aria-busy');
+    });
+  }
+  function fallback() {
+    failed = true;
+    button.hidden = true;
+    older.hidden = false;
+    status.textContent = 'Use Older Posts to continue.';
+  }
+  button.addEventListener('click', function () { loadMore(true); });
+  if (config.automatic) window.addEventListener('scroll', function () {
+    if (pager.getBoundingClientRect().top < innerHeight + 150) loadMore(false);
+  }, {passive:true});
+}
+
+//]]>
+</script>
+</head>
 
   <body expr:class='data:blog.pageType'>
 <a class='skip-link' href='#photomag-main'>Skip to content</a>
@@ -624,7 +734,7 @@ user is not using shrink to fit then we expand the header.
                         <b:if cond='data:mobile'>
                           <div id='header-inner'>
                             <div class='titlewrapper' style='background: transparent'>
-                              <b:if cond='data:blog.url == data:blog.homepageUrl'>
+                              <b:if cond='data:blog.pageType not in {&quot;item&quot;,&quot;static_page&quot;,&quot;error_page&quot;}'>
 
                               <h1 class='title' style='background: transparent; border-width: 0px'>
 
@@ -647,7 +757,7 @@ user is not using shrink to fit then we expand the header.
                           <b:else/>
                           <div expr:style='&quot;background-image: url(\&quot;&quot; + data:sourceUrl + &quot;\&quot;); &quot;                      + &quot;background-position: &quot;                      + data:backgroundPositionStyleStr + &quot;; &quot;                      + data:widthStyleStr                      + &quot;min-height: &quot; + data:height                      + &quot;_height: &quot; + data:height                      + &quot;background-repeat: no-repeat; &quot;' id='header-inner'>
                             <div class='titlewrapper' style='background: transparent'>
-                              <b:if cond='data:blog.url == data:blog.homepageUrl'>
+                              <b:if cond='data:blog.pageType not in {&quot;item&quot;,&quot;static_page&quot;,&quot;error_page&quot;}'>
 
                               <h1 class='title' style='background: transparent; border-width: 0px'>
 
@@ -670,6 +780,7 @@ user is not using shrink to fit then we expand the header.
                         </b:if>
                         <b:else/>
                         <!--Show the image only-->
+<b:if cond='data:blog.pageType not in {&quot;item&quot;,&quot;static_page&quot;,&quot;error_page&quot;}'><h1 class='sr-only'><data:title/></h1></b:if>
                         <div id='header-inner'>
                           <a expr:href='data:blog.homepageUrl' style='display: block'>
                             <img expr:alt='data:title' expr:height='data:height' expr:id='data:widget.instanceId + &quot;_headerimg&quot;' expr:src='data:sourceUrl' expr:width='data:width' style='display: block'/>
@@ -684,7 +795,7 @@ user is not using shrink to fit then we expand the header.
                       <!--No header image -->
                       <div id='header-inner'>
                         <div class='titlewrapper'>
-                          <b:if cond='data:blog.url == data:blog.homepageUrl'>
+                          <b:if cond='data:blog.pageType not in {&quot;item&quot;,&quot;static_page&quot;,&quot;error_page&quot;}'>
 
                           <h1 class='title'>
 
@@ -976,7 +1087,7 @@ user is not using shrink to fit then we expand the header.
             </b:if>
             <data:post.cmtfpIframe/>
             <script type='text/javascript'>
-              BLOG_CMT_createIframe(&#39;<data:post.appRpcRelayPath/>&#39;);
+              BLOG_CMT_createIframe(&#39;<data:post.appRpcRelayPath.jsEscaped/>&#39;);
             </script>
           </div>
         </b:includable>
@@ -1217,7 +1328,7 @@ user is not using shrink to fit then we expand the header.
           <b:include name='mobile-nextprev'/>
         </b:includable>
         <b:includable id='mobile-nextprev'>
-          <div class='blog-pager' id='blog-pager'>
+          <div aria-label='Post pages' class='blog-pager' id='blog-pager' role='navigation'>
             <b:if cond='data:newerPageUrl'>
               <div class='mobile-link-button' id='blog-pager-newer-link'>
                 <a class='blog-pager-newer-link' expr:href='data:newerPageUrl' expr:id='data:widget.instanceId + &quot;_blog-pager-newer-link&quot;' expr:title='data:newerPageTitle'>&amp;lsaquo;</a>
@@ -1242,6 +1353,7 @@ user is not using shrink to fit then we expand the header.
           <div class='clear'/>
         </b:includable>
         <b:includable id='mobile-post' var='post'>
+<b:include data='post' name='colorlib-post-schema'/>
           <div class='date-outer'>
             <b:if cond='data:post.dateHeader'>
               <h2 class='date-header'><span><data:post.dateHeader/></span></h2>
@@ -1268,22 +1380,7 @@ user is not using shrink to fit then we expand the header.
                       </b:if>
                     </h3>
                   </b:if>
-          <b:if cond='data:blog.pageType == &quot;item&quot;'>
-          <script type='application/ld+json'>
-          {
-            "@context": "https://schema.org",
-            "@type": "BlogPosting",
-            "mainEntityOfPage": { "@type": "WebPage", "@id": "<data:post.url/>" },
-            "headline": "<data:post.title/>",
-            <b:if cond='data:post.firstImageUrl'>"image": "<data:post.firstImageUrl/>",</b:if>
-            "datePublished": "<data:post.timestampISO8601/>",
-            "dateModified": "<data:post.lastUpdatedISO8601/>",
-            "author": { "@type": "Person", "name": "<data:post.author/>" },
-            "publisher": { "@type": "Organization", "name": "<data:blog.title/>" },
-            "url": "<data:post.url/>"
-          }
-          </script>
-          </b:if>
+
 
 
                   <div class='post-header'>
@@ -1349,7 +1446,7 @@ user is not using shrink to fit then we expand the header.
           </div>
         </b:includable>
         <b:includable id='nextprev'>
-          <div class='blog-pager' id='blog-pager'>
+          <div aria-label='Post pages' class='blog-pager' id='blog-pager' role='navigation'>
             <b:if cond='data:newerPageUrl'>
               <span id='blog-pager-newer-link'>
                 <a class='blog-pager-newer-link' expr:href='data:newerPageUrl' expr:id='data:widget.instanceId + &quot;_blog-pager-newer-link&quot;' expr:title='data:newerPageTitle'><data:newerPageTitle/></a>
@@ -1373,7 +1470,22 @@ user is not using shrink to fit then we expand the header.
           </div>
           <div class='clear'/>
         </b:includable>
-        <b:includable id='post' var='post'>
+        <b:includable id='colorlib-post-schema' var='post'><b:if cond='data:blog.pageType == &quot;item&quot;'><script type='application/ld+json'>
+          {
+            "@context": "https://schema.org",
+            "@type": "BlogPosting",
+            "mainEntityOfPage": { "@type": "WebPage", "@id": "<data:post.url.canonical.jsonEscaped/>" },
+            "headline": "<data:post.title.jsonEscaped/>",
+            <b:if cond='data:post.firstImageUrl'>"image": "<data:post.firstImageUrl.jsonEscaped/>",</b:if>
+            "datePublished": "<data:post.timestampISO8601.jsonEscaped/>",
+            <b:if cond='data:post.lastUpdatedISO8601'>"dateModified": "<data:post.lastUpdatedISO8601.jsonEscaped/>",</b:if>
+            "author": { "@type": "Person", "name": "<data:post.author.jsonEscaped/>" },
+            "publisher": { "@type": "Organization", "name": "<data:blog.title.jsonEscaped/>" },
+            "url": "<data:post.url.canonical.jsonEscaped/>"
+          }
+          </script></b:if></b:includable>
+<b:includable id='post' var='post'>
+<b:include data='post' name='colorlib-post-schema'/>
           <b:if cond='data:blog.pageType in {&quot;index&quot;,&quot;archive&quot;}'>
             <b:if cond='data:post.isFirstPost'>
 
@@ -1559,7 +1671,7 @@ user is not using shrink to fit then we expand the header.
             </b:if>
             <data:post.cmtfpIframe/>
             <script type='text/javascript'>
-              BLOG_CMT_createIframe(&#39;<data:post.appRpcRelayPath/>&#39;);
+              BLOG_CMT_createIframe(&#39;<data:post.appRpcRelayPath.jsEscaped/>&#39;);
             </script>
           </div>
         </b:includable>
@@ -2163,7 +2275,7 @@ user is not using shrink to fit then we expand the header.
     <script type='text/javascript'>
 //<![CDATA[
 // Plugin: SelectNav.js ~ url: https://github.com/lukaszfiszer/selectnav.js
-window.selectnav=function(){"use strict";var e=function(e,t){function c(e){var t;if(!e)e=window.event;if(e.target)t=e.target;else if(e.srcElement)t=e.srcElement;if(t.nodeType===3)t=t.parentNode;if(t.value)window.location.href=t.value}function h(e){var t=e.nodeName.toLowerCase();return t==="ul"||t==="ol"}function p(e){for(var t=1;document.getElementById("selectnav"+t);t++);return e?"selectnav"+t:"selectnav"+(t-1)}function d(e){a++;var t=e.children.length,n="",l="",c=a-1;if(!t){return}if(c){while(c--){l+=o}l+=" "}for(var v=0;v<t;v++){var m=e.children[v].children[0];if(typeof m!=="undefined"){var g=m.innerText||m.textContent;var y="";if(r){y=m.className.search(r)!==-1||m.parentNode.className.search(r)!==-1?f:""}if(i&&!y){y=m.href===document.URL?f:""}n+='<option value="'+m.href+'" '+y+">"+l+g+"</option>";if(s){var b=e.children[v].children[1];if(b&&h(b)){n+=d(b)}}}}if(a===1&&u){n='<option value="">'+u+"</option>"+n}if(a===1){n='<select class="selectnav" id="'+p(true)+'">'+n+"</select>"}a--;return n}e=document.getElementById(e);if(!e){return}if(!h(e)){return}if(!("insertAdjacentHTML"in window.document.documentElement)){return}document.documentElement.className+=" js";var n=t||{},r=n.activeclass||"active",i=typeof n.autoselect==="boolean"?n.autoselect:true,s=typeof n.nested==="boolean"?n.nested:true,o=n.indent||"-",u=n.label||"Menu",a=0,f=" selected ";e.insertAdjacentHTML("afterend",d(e));var l=document.getElementById(p());if(l.addEventListener){l.addEventListener("change",c)}if(l.attachEvent){l.attachEvent("onchange",c)}return l};return function(t,n){e(t,n)}}();
+window.selectnav=function(){"use strict";var e=function(e,t){function c(e){var t;if(!e)e=window.event;if(e.target)t=e.target;else if(e.srcElement)t=e.srcElement;if(t.nodeType===3)t=t.parentNode;if(t.value)window.location.href=t.value}function h(e){var t=e.nodeName.toLowerCase();return t==="ul"||t==="ol"}function p(e){for(var t=1;document.getElementById("selectnav"+t);t++);return e?"selectnav"+t:"selectnav"+(t-1)}function d(e){a++;var t=e.children.length,n="",l="",c=a-1;if(!t){return}if(c){while(c--){l+=o}l+=" "}for(var v=0;v<t;v++){var m=e.children[v].children[0];if(typeof m!=="undefined"){var g=m.innerText||m.textContent;var y="";if(r){y=m.className.search(r)!==-1||m.parentNode.className.search(r)!==-1?f:""}if(i&&!y){y=m.href===document.URL?f:""}n+='<option value="'+colorlibText(m.href)+'" '+y+">"+colorlibText(l+g)+"</option>";if(s){var b=e.children[v].children[1];if(b&&h(b)){n+=d(b)}}}}if(a===1&&u){n='<option value="">'+u+"</option>"+n}if(a===1){n='<select aria-label="Navigation" class="selectnav" id="'+p(true)+'">'+n+"</select>"}a--;return n}e=document.getElementById(e);if(!e){return}if(!h(e)){return}if(!("insertAdjacentHTML"in window.document.documentElement)){return}document.documentElement.className+=" js";var n=t||{},r=n.activeclass||"active",i=typeof n.autoselect==="boolean"?n.autoselect:true,s=typeof n.nested==="boolean"?n.nested:true,o=n.indent||"-",u=n.label||"Menu",a=0,f=" selected ";e.insertAdjacentHTML("afterend",d(e));var l=document.getElementById(p());if(l.addEventListener){l.addEventListener("change",c)}if(l.attachEvent){l.attachEvent("onchange",c)}return l};return function(t,n){e(t,n)}}();
 
 
 // ---- Main navigation: rebuild the flat LinkList into a nested menu ----
@@ -2303,7 +2415,7 @@ document.querySelectorAll(".photomag-slider").forEach(function (marker) {
         else image = image.replace(/\/(s|w)\d+[^\/]*\//, "/s1200/");
       }
       var category = entry.category && entry.category[0] ? entry.category[0].term : "";
-      var categoryHtml = '<a href="/search/label/' + category + '?&max-results=' + perpage + '" title="Show all posts in ' + category + '">' + category + "</a>";
+      var categoryHtml = '<a href="/search/label/' + encodeURIComponent(category) + '?&max-results=' + perpage + '" title="Show all posts in ' + colorlibText(category) + '">' + colorlibText(category) + "</a>";
       var url = "#";
       entry.link.forEach(function (l) { if (l.rel === "alternate") url = l.href; });
       if (index === 0) {
@@ -2312,7 +2424,7 @@ document.querySelectorAll(".photomag-slider").forEach(function (marker) {
         hero.fetchPriority = "high";
         hero.src = image;
       }
-      slides += '<div class="swiper-slide slide item"><div class="slide-wrapper" style="background:url(\'' + image + '\')"><div class="slide-inner"><div class="slide-box"><div class="slidebox-inner"><div class="slide-category">' + categoryHtml + '</div><div class="slide-title"><h3><a href="' + url + '">' + entry.title.$t + "</a></h3></div></div></div></div></div></div>";
+      slides += '<div class="swiper-slide slide item"><div class="slide-wrapper" style="background:url(\'' + image + '\')"><div class="slide-inner"><div class="slide-box"><div class="slidebox-inner"><div class="slide-category">' + categoryHtml + '</div><div class="slide-title"><h3><a href="' + url + '">' + colorlibText(entry.title.$t) + "</a></h3></div></div></div></div></div></div>";
     });
     var main = document.getElementById("slider_main");
     if (!main) return;
@@ -2348,74 +2460,7 @@ document.querySelectorAll(".photomag-slider").forEach(function (marker) {
 </b:if>
 <script>
 //<![CDATA[
-// Infinite scroll with a load-more fallback (vanilla replacement for the jQuery loader)
-(function () {
-  if (document.body.classList.contains("item")) return;
-  var container = document.querySelector(".ajaxed");
-  var pager = document.getElementById("blog-pager");
-  if (!container || !pager) return;
-  var older = document.querySelector("a.blog-pager-older-link");
-  var nextLink = older ? older.getAttribute("href") : "";
-  if (!nextLink) return;
-  var loading = false;
-  var box = document.createElement("div");
-  box.style.cssText = "text-align:center;font-size:150%;";
-  var link = document.createElement("a");
-  link.href = "javascript:;";
-  link.textContent = "Load more posts";
-  var img = document.createElement("img");
-  img.src = "https://lh3.googleusercontent.com/-FiCzyOK4Mew/T4aAj2uVJKI/AAAAAAAAPaY/x23tjGIH7ls/s32/ajax-loader.gif";
-  img.alt = "";
-  img.style.display = "none";
-  box.appendChild(link);
-  box.appendChild(img);
-  pager.parentNode.insertBefore(box, pager);
-  pager.style.display = "none";
-  function photomagFormatLoaded(root) {
-    root.querySelectorAll("time[datetime]").forEach(function (el) {
-      var parts = (el.getAttribute("datetime") || "").split("T")[0].split("-");
-      if (parts.length === 3) {
-        el.insertAdjacentText("afterend", parts[2] + "." + parts[1] + "." + parts[0]);
-        el.remove();
-      }
-    });
-    root.querySelectorAll(".Label a, .pixel-max-limit").forEach(function (a) {
-      var href = a.getAttribute("href");
-      if (href && href.indexOf("max-results=") === -1) a.setAttribute("href", href + "?&max-results=" + perpage);
-    });
-  }
-  function loadMore() {
-    if (loading || !nextLink) return;
-    loading = true;
-    link.style.display = "none";
-    img.style.display = "inline";
-    fetch(nextLink).then(function (r) { return r.text(); }).then(function (text) {
-      var doc = new DOMParser().parseFromString(text, "text/html");
-      var newer = doc.querySelector("a.blog-pager-older-link");
-      nextLink = newer ? newer.getAttribute("href") : "";
-      var fresh = doc.querySelector(".ajaxed");
-      if (fresh) {
-        Array.prototype.slice.call(fresh.children).forEach(function (child) {
-          container.appendChild(child);
-        });
-        photomagFormatLoaded(container);
-      }
-      img.style.display = "none";
-      if (nextLink) link.style.display = "inline";
-      else box.style.display = "none";
-      loading = false;
-    }).catch(function () {
-      loading = false;
-      img.style.display = "none";
-      link.style.display = "inline";
-    });
-  }
-  link.addEventListener("click", loadMore);
-  window.addEventListener("scroll", function () {
-    var height = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight);
-    if (height - (window.scrollY + window.innerHeight) < 150) loadMore();
-  }, { passive: true });
-})();
+colorlibInfinitePager({pager:'#blog-pager',older:'a.blog-pager-older-link',container:'.ajaxed',posts:':scope > article',automatic:true,after:function(root){root.querySelectorAll('time[datetime]').forEach(function(el){var p=(el.getAttribute('datetime')||'').split('T')[0].split('-');if(p.length===3){el.insertAdjacentText('afterend',p[2]+'.'+p[1]+'.'+p[0]);el.remove();}});root.querySelectorAll('.Label a,[class*=max-limit]').forEach(function(a){a.setAttribute('href',colorlibLimitUrl(a.getAttribute('href'),perpage));});}});
 //]]>
 </script>
 <script type='text/javascript'>
@@ -2431,7 +2476,7 @@ document.addEventListener("DOMContentLoaded", function () {
 // Label links honor the configured posts-per-page
 document.querySelectorAll(".Label a, .pixel-max-limit").forEach(function (a) {
   var href = a.getAttribute("href");
-  if (href && href.indexOf("max-results=") === -1) a.setAttribute("href", href + "?&max-results=" + perpage);
+  if (href && href.indexOf("max-results=") === -1) a.setAttribute("href", colorlibLimitUrl(href, perpage));
 });
 //]]>
 </script>
